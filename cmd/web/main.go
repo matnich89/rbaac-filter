@@ -1,9 +1,11 @@
 package main
 
 import (
+	"github.com/gorilla/mux"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"log"
+	"net/http"
 )
 
 func main() {
@@ -16,5 +18,5 @@ func main() {
 	if err != nil {
 		log.Fatalf("issue getting new config %s", err.Error())
 	}
-	log.Println("started....")
+	http.ListenAndServe(":8080", mux.NewRouter())
 }
