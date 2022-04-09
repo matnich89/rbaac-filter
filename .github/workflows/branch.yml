@@ -1,9 +1,8 @@
-
 name: Test pull request
 
 on:
   pull_request:
-    branches: [ master, main ]
+    branches: [ master]
 
 jobs:
   test_pull_request:
@@ -16,6 +15,5 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Run tests
         run: go test ./...
