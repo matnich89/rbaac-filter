@@ -18,5 +18,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("issue getting new config %s", err.Error())
 	}
+	log.Println("started :)")
 	http.ListenAndServe(":8080", mux.NewRouter())
 }
