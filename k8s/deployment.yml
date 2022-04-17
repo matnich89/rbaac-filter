@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-there
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-there
+  template:
+    metadata:
+      labels:
+        app: hello-there
+    spec:
+      containers:
+        - name: hello-there
+          image: iammat89/hello-go:latest
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-there
+spec:
+  type: ClusterIP
+  selector:
+    app: hello-there
+  ports:
+    - port: 8080
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-there
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: hello-there
+                port:
+                  number: 8080
+

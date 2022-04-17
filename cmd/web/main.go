@@ -2,22 +2,18 @@ package main
 
 import (
 	"github.com/gorilla/mux"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
-	"log"
-	"net/http"
+	"github.com/matnich89/rbacfilter/cmd/internal/logger"
+	"github.com/matnich89/rbacfilter/cmd/web/handlers"
 )
 
 func main() {
-	log.Println("starting.....")
-	config, err := rest.InClusterConfig()
+	logger := logger.New()
+
+	requestHandlers := handlers.New(logger)
+	application := newApp(requestHandlers, mux.NewRouter(), logger)
+	application.routes()
+	err := application.serve()
 	if err != nil {
-		log.Fatalln("This application has to be ran instead a k8s cluster...")
+		application.logger.OutputFatal(err.Error())
 	}
-	_, err = kubernetes.NewForConfig(config)
-	if err != nil {
-		log.Fatalf("issue getting new config %s", err.Error())
-	}
-	log.Println("started :)")
-	http.ListenAndServe(":8080", mux.NewRouter())
 }
